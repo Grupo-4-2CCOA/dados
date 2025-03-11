@@ -1,26 +1,93 @@
 -- queries.sql:
+-- queries simples:
+select
+  *
+  from `user`;
 
-select * from usuario;
-select * from funcionario;
-select * from servico;
-select * from agendamento;
+select
+  *
+  from `employee`;
 
+select
+  *
+  from `service`;
 
-select * from agendamento
-join usuario u on fk_user = u.idusuario
-join funcionario f on fkfuncionario = f.idfuncionario
-join servico s on fkservico = s.idservico;
+select
+  *
+  from `schedule`;
 
-select u.name,
-u.fidelidade,
-f.name,
-f.cargo,
-s.type,
-s.price,
-s.category,
-a.dia,
-a.hora,
-a.duracao from agendamento a
-join usuario u on fk_user = u.idusuario
-join funcionario f on fkfuncionario = f.idfuncionario
-join servico s on fkservico = s.idservico;
+select
+  *
+  from `payment`;
+
+select
+  *
+  from `feedback`;
+
+-- agendamento, usuário, funcionário e serviço:
+select
+  *
+  from `schedule` s
+    join `user` u on s.`fk_user` = u.`id`
+    join `employee` f on s.`fk_employee` = f.`id`
+    join `service` se on s.`fk_service` = se.`id`;
+
+-- agendamento, usuário e serviço (somente informações importantes e públicas):
+select
+  u.`name`,
+  u.`fidelity`,
+  f.`name`,
+  f.`role`,
+  se.`type`,
+  se.`price`,
+  se.`category`,
+  s.`day`,
+  s.`time`,
+  s.`duration`
+  from `schedule` s
+    join `user` u on s.`fk_user` = u.`id`
+    join `employee` f on s.`fk_employee` = f.`id`
+    join `service` se on s.`fk_service` = se.`id`;
+
+-- agendamento, usuário, serviço e método de pagamento (somente informações importantes e públicas):
+select
+  u.`name`,
+  u.`fidelity`,
+  f.`name`,
+  f.`role`,
+  se.`type`,
+  se.`price`,
+  se.`category`,
+  a.`dia`,
+  a.`hora`,
+  a.`duracao`,
+  p.`type`,
+  p.`transaction`
+  from `schedule` a
+    join `user` u on s.`fk_user` = u.`id`
+    join `employee` f on s.`fk_employee` = f.`id`
+    join `service` se on s.`fk_service` = se.`id`
+    join `payment` p on s.`fk_payment` = u.`id`;
+
+-- agendamento, usuário, serviço, método de pagamento e feedback (somente informações importantes e públicas):
+select
+  u.`name`,
+  u.`fidelity`,
+  f.`name`,
+  f.`role`,
+  se.`type`,
+  se.`price`,
+  se.`category`,
+  a.`dia`,
+  a.`hora`,
+  a.`duracao`,
+  p.`type`,
+  p.`transaction`,
+  fb.`comment`,
+  fb.`rating`
+  from `schedule` s
+    join `user` u on `fk_user` = u.`id`
+    join `employee` f on `fk_employee` = f.`id`
+    join `service` se on `fk_service` = se.`id`
+    join `payment` p on `fk_payment` = u.`id`
+    join `feedback` fb on `fk_feedback` = u.`id`;
