@@ -13,8 +13,7 @@ create table user (
   `cpf` char(11) unique not null,
   `name` varchar(75) not null,
   `cep` char(8) not null,
-  `birth` date,
-  `fidelity` enum('FIEL', 'NEW') not null
+  `birth` date
 );
 -- tabela de funcionários:
 create table employee (
@@ -23,7 +22,7 @@ create table employee (
   `password` varchar(50) not null,
   `phone` char(11) unique not null,
   `cpf` char(11) unique not null,
-  `role` enum("OWNER", "EMPLOYEE") not null,
+  `role` enum("OWNER", "INFRA", "EMPLOYEE") not null,
   `cep` char(8) not null,
   `birth` date,
   `name` varchar(75)
@@ -38,38 +37,52 @@ create table service (
   `description` varchar(200),
   `image` varchar(255)
 );
+-- tabela de atendimentos:
+create table appointment (
+	`id` int primary key auto_increment,
+    `status` enum("ACTIVE", "INACTIVE") not null,
+    `transaction_hash` varchar(255) not null,
+    `duraction` varchar(45),
+    `fk_employee` int,
+    `fk_service` int,
+    
+    constraint `appointment_fk_employee` foreign key (`fk_employee`) references `employee`(`id`),
+    constraint `appointment_fk_service` foreign key (`fk_service`) references `service`(`id`)
+);
 -- tabela de agendamentos:
 create table schedule (
-  `id` int primary key auto_increment,
+  `id` int auto_increment primary key,
+  `status` enum("ACTIVE", "INACTIVE") not null,
   `date_time` datetime not null,
-  `duration` varchar(50),
-  `fk_user` int,
-  `fk_service` int,
-  `fk_employee` int,
-
-  constraint `schedule_fk_user` foreign key (`fk_user`) references `user`(`id`),
-  constraint `schedule_fk_employee` foreign key (`fk_employee`) references `employee`(`id`),
-  constraint `schedule_fk_service` foreign key (`fk_service`) references `service`(`id`)
+  `fk_appointment` int,
+  
+  constraint `schedule_fk_appointment` foreign key (`fk_appointment`) references `appointment`(`id`)
 );
 -- tabela de métodos de pagamentos:
 create table payment(
   `id` int primary key auto_increment,
-  `type` enum('DEBITO', 'CREDITO', 'PIX') not null,
+  `type` varchar(50) not null,
   `date_time` datetime not null,
-  `transaction` varchar(255),
-  `fk_user` int,
+  `fk_appointment` int,
   
-  constraint `payment_fk_user` foreign key (`fk_user`) references `user`(`id`)
+  constraint `payment_fk_appointment` foreign key (`fk_appointment`) references `appointment`(`id`)
 );
 -- tabela de feedbacks:
 create table feedback (
-  `id` int primary key auto_increment,
+  `id` int auto_increment primary key,
   `comment` varchar(200),
-  `rating` tinyint,
-  `fk_user` int,
-  `fk_schedule` int,
+  `rating` int
   
-  constraint `feedback_check_rating` check(`rating` between 0 and 5),
-  constraint `feedback_fk_user` foreign key (`fk_user`) references `user`(`id`),
-  constraint `feedback_fk_schedule` foreign key (`fk_schedule`) references `schedule`(`id`)
+  constraint `feedback_check_rating` check(`rating` between 0 and 5)
+);
+-- tabela de n:n
+create table user_appointment (
+	`fk_user` int,
+    `fk_appointment` int,
+    `fk_feedback` int,
+    primary key(`fk_user`, `fk_appointment`, `fk_feedback`),
+    
+    constraint `user_appointment_fk_user` foreign key (`fk_user`) references `user`(`id`),
+    constraint `user_appointment_fk_appointment` foreign key (`fk_appointment`) references `appointment`(`id`),
+    constraint `user_appointment_fk_feedback` foreign key (`fk_feedback`) references `feedback`(`id`)
 );
