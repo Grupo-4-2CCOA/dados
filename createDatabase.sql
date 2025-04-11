@@ -17,7 +17,6 @@ create table `user`(
   `password` varchar(80) not null,
   `cpf` char(11) unique,
   `phone` char(11) unique,
-  `birth` date,
   `cep` char(8)
 );
 -- tabela de tipo de pagamento:
@@ -65,7 +64,7 @@ create table `schedule` (
 
   `status` enum('ACTIVE', 'COMPLETED', 'CANCELED') not null,
   `appointment_datetime` datetime not null,
-  `duration` int null,
+  `duration` int,
   `transaction_hash` varchar(255),
 
   `fk_user` int not null,
@@ -81,7 +80,7 @@ create table `schedule_item`(
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
 
   `final_price` decimal(5,2) not null,
-  `discount` decimal(5,2) not null,
+  `discount` decimal(5,2) not null default 0,
 
   `fk_schedule` int not null,
 
@@ -94,7 +93,7 @@ create table `feedback` (
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
 
   `rating` int not null,
-  `comment` varchar(255) null,
+  `comment` varchar(255),
 
   `fk_schedule` int not null,
   `fk_user` int not null,

@@ -24,70 +24,18 @@ select
   *
   from `feedback`;
 
--- agendamento, usuário, funcionário e serviço:
-select
-  *
-  from `schedule` s
-    join `user` u on s.`fk_user` = u.`id`
-    join `employee` f on s.`fk_employee` = f.`id`
-    join `service` se on s.`fk_service` = se.`id`;
+-- query completa: agendamentos com usuários, funcionários, serviços, categorias, métodos de pagamento e feedbacks (somente informações importantes e públicas)
 
--- agendamento, usuário e serviço (somente informações importantes e públicas):
-select
-  u.`name`,
-  u.`fidelity`,
-  f.`name`,
-  f.`role`,
-  se.`type`,
-  se.`price`,
-  se.`category`,
-  s.`day`,
-  s.`time`,
-  s.`duration`
-  from `schedule` s
-    join `user` u on s.`fk_user` = u.`id`
-    join `employee` f on s.`fk_employee` = f.`id`
-    join `service` se on s.`fk_service` = se.`id`;
+-- agendamentos da semana, mês e últimos 28-35 (quantos agendamentos foram feitos no momento atual: current_timestamp)
+-- atendimentos (mesmas 3 métricas de tempo) (quantos atendimentos serão feitos no momento atual: current_timestamp)
+-- query completa (para as mesmas 3 métricas de tempo)
 
--- agendamento, usuário, serviço e método de pagamento (somente informações importantes e públicas):
-select
-  u.`name`,
-  u.`fidelity`,
-  f.`name`,
-  f.`role`,
-  se.`type`,
-  se.`price`,
-  se.`category`,
-  a.`dia`,
-  a.`hora`,
-  a.`duracao`,
-  p.`type`,
-  p.`transaction`
-  from `schedule` a
-    join `user` u on s.`fk_user` = u.`id`
-    join `employee` f on s.`fk_employee` = f.`id`
-    join `service` se on s.`fk_service` = se.`id`
-    join `payment` p on s.`fk_payment` = u.`id`;
+-- agendamentos por semana e mês (quantos agendamentos foram feitos por período: group by)
+-- atendimentos (mesmas 2 métricas de tempo) (quantos atendimentos serão feitos por período: group by)
+-- query completa (para as mesmas 2 métricas de tempo)
 
--- agendamento, usuário, serviço, método de pagamento e feedback (somente informações importantes e públicas):
-select
-  u.`name`,
-  u.`fidelity`,
-  f.`name`,
-  f.`role`,
-  se.`type`,
-  se.`price`,
-  se.`category`,
-  a.`dia`,
-  a.`hora`,
-  a.`duracao`,
-  p.`type`,
-  p.`transaction`,
-  fb.`comment`,
-  fb.`rating`
-  from `schedule` s
-    join `user` u on `fk_user` = u.`id`
-    join `employee` f on `fk_employee` = f.`id`
-    join `service` se on `fk_service` = se.`id`
-    join `payment` p on `fk_payment` = u.`id`
-    join `feedback` fb on `fk_feedback` = u.`id`;
+-- atendimentos realizados (mesmas 5 métricas de tempo, 3 momentâneas e 2 agrupadas)
+-- atendimentos cancelados (mesmas 5 métricas de tempo, 3 momentâneas e 2 agrupadas)
+-- taxa de atendimentos realizados (mesmas 5 métricas de tempo, 3 momentâneas e 2 agrupadas)
+
+-- ganhos por serviço (mesmas 5 métricas de tempo, 3 momentâneas e 2 agrupadas)

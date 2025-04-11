@@ -2,50 +2,63 @@
 -- inserção na tabela de usuários:
 insert into
   `user`
-values
-  (default, 'felipe', 'felipe@gmail,com', '12345678912', '12345678', '2006-03-03', '11950310303', 'fiel', 'teste'),
-  (default, 'miguel', 'miguel@gmail,com', '12345678913', '12345678', '2006-01-01', '11950310303', 'fiel', 'teste'),
-  (default, 'murilo', 'murilo@gmail,com', '12345678916', '12345678', '2006-02-02', '11950310303', 'nova', 'teste'),
-  (default, 'fabricio', 'fabricio@gmail,com', '12345678917', '12345678', '2006-04-04', '11950310303', 'nova', 'teste');
-
--- inserção na tabela de funcionários:
-insert into
-  `employee`
-values
-  (default, 'enzo', 'enzo@gmail.com', '12345678903', '11950310303', 'dono', 'teste'),
-  (default, 'lucas', 'lucas@gmail.com', '12345678900', '11950310303', 'funcionario', 'teste');
-
--- inserção na tabela de serviços:
-insert into
-  `service`
-values
-  (default, 'unha das mãos', '50.50', '25.00', 'description teste', 'unha', 'image teste'),
-  (default, 'corte de cabelo feminino', '100.00', '50.00', 'description teste', 'cabelo', 'image teste'),
-  (default, 'depilação a laser', '120.50', '60.25', 'description teste', 'depilacão', 'image teste');
-
--- inserção na tabela de agendamentos:
-insert into
-  `schedule`
-values
-  (default, 1, 1, 1, '2025-03-03', '14:30:00', '1 hora'),
-  (default, 2, 1, 1, '2025-03-03', '15:30:00', '1 hora'),
-  (default, 3, 2, 2, '2025-03-03', '16:30:00', '1 hora'),
-  (default, 4, 2, 3, '2025-03-03', '17:30:00', '1 hora');
-
+  (`role`, `name`, `email`, `password`, `cpf`, `phone`, `cep`)
+  values
+  ('CUSTOMER', 'felipe', 'felipe@gmail,com', '12345678', '12345678912', '11950310303', 'teste'),
+  ('CUSTOMER', 'miguel', 'miguel@gmail,com', '12345678', '12345678913', '11950310303', 'teste'),
+  ('EMPLOYEE', 'murilo', 'murilo@gmail,com', '12345678', '12345678916', '11950310303', 'teste'),
+  ('OWNER', 'fabricio', 'fabricio@gmail,com', '12345678', '12345678917', '11950310303', 'teste');
 -- inserção na tabela de métodos de pagamentos:
 insert into
   `payment`
+  (`name`)
+  values
+  ('debito'),
+  ('credito'),
+  ('pix'),
+  ('dinheiro');
+-- inserção na tabela de métodos de categoria:
+insert into
+  `category`
+  (`name`)
+  values
+  ('Mão'),
+  ('Cabelo'),
+  ('Depilação'),
+  ('Rosto');
+-- inserção na tabela de serviços:
+insert into
+  `service`
+  (`name`, `base_price`, `base_duration`, `fk_category`)
 values
-  (default, 'debito', '2025-03-03 14:30:00', '2hr3uygh37n3uth73', 1),
-  (default, 'credito', '2025-03-03 14:30:00', '2hr3uygh37n3uth73', 2),
-  (default, 'pix', '2025-03-03 14:30:00', '2hr3uygh37n3uth73', 3),
-  (default, 'pix', '2025-03-03 14:30:00', '2hr3uygh37n3uth73', 4);
-
+  ('Manicure', 50, 60, 1),
+  ('Banho de Gel', 120, 90, 1),
+  ('Escovação de cabelo', 30, 30, 2),
+  ('Depilação de Axila', 25, 120, 3);
+-- inserção na tabela de agendamentos:
+insert into
+  `schedule`
+  (`status`, `appointment_datetime`, `fk_user`, `fk_payment_type`)
+values
+  ('ACTIVE', '2025-03-03 14:30:00', 1, 1),
+  ('ACTIVE', '2025-03-03 15:30:00', 1, 2),
+  ('ACTIVE', '2025-03-03 16:30:00', 2, 3),
+  ('ACTIVE', '2025-03-03 17:30:00', 1, 3);
+-- inserção na tabela de serviços por agendamentos:
+insert into
+  `schedule`
+  (`final_price`, `fk_schedule`)
+values
+  (30, 1),
+  (30, 2),
+  (30, 3),
+  (30, 4);
 -- inserção na tabela de feedbacks:
 insert into
   `feedback`
+  (`rating`, `comment`, `fk_schedule`, `fk_user`)
 values
-  (default, 'comentario teste', 4, 1),
-  (default, 'comentario teste', 3, 2),
-  (default, 'comentario teste', 5, 3),
-  (default, 'comentario teste', 5, 4);
+  (5, 'Excepcional', 1, 1),
+  (5, 'Serviço de qualidade', 2, 2),
+  (5, 'Rápido', 3, 3),
+  (5, 'Ambiente acolhedor', 4, 3);
