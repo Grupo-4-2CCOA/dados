@@ -83,8 +83,10 @@ create table `schedule_item`(
   `discount` decimal(5,2) not null default 0,
 
   `fk_schedule` int not null,
+  `fk_service` int not null,
 
-  constraint `schedule_item_fk_schedule` foreign key (`fk_schedule`) references `schedule`(`id`)
+  constraint `schedule_item_fk_schedule` foreign key (`fk_schedule`) references `schedule`(`id`),
+  constraint `schedule_item_fk_service` foreign key (`fk_service`) references `service`(`id`)
 );
 -- tabela de feedbacks:
 create table `feedback` (
