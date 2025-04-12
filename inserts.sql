@@ -1,16 +1,16 @@
--- insert.sql:
+-- inserts.sql:
 -- inserção na tabela de usuários:
 insert into
   `user`
   (`role`, `name`, `email`, `password`, `cpf`, `phone`, `cep`)
   values
   ('CUSTOMER', 'felipe', 'felipe@gmail,com', '12345678', '12345678912', '11950310303', 'teste'),
-  ('CUSTOMER', 'miguel', 'miguel@gmail,com', '12345678', '12345678913', '11950310303', 'teste'),
-  ('EMPLOYEE', 'murilo', 'murilo@gmail,com', '12345678', '12345678916', '11950310303', 'teste'),
-  ('OWNER', 'fabricio', 'fabricio@gmail,com', '12345678', '12345678917', '11950310303', 'teste');
+  ('CUSTOMER', 'miguel', 'miguel@gmail,com', '12345678', '12345678913', '11950310304', 'teste'),
+  ('EMPLOYEE', 'murilo', 'murilo@gmail,com', '12345678', '12345678916', '11950310305', 'teste'),
+  ('OWNER', 'fabricio', 'fabricio@gmail,com', '12345678', '12345678917', '11950310306', 'teste');
 -- inserção na tabela de métodos de pagamentos:
 insert into
-  `payment`
+  `payment_type`
   (`name`)
   values
   ('debito'),
@@ -46,13 +46,13 @@ values
   ('ACTIVE', '2025-03-03 17:30:00', 1, 3);
 -- inserção na tabela de serviços por agendamentos:
 insert into
-  `schedule`
-  (`final_price`, `fk_schedule`)
+  `schedule_item`
+  (`final_price`, `fk_schedule`, `fk_service`)
 values
-  (30, 1),
-  (30, 2),
-  (30, 3),
-  (30, 4);
+  (50, 1, 1),
+  (120, 2, 2),
+  (30, 3, 3),
+  (25, 4, 3);
 -- inserção na tabela de feedbacks:
 insert into
   `feedback`
