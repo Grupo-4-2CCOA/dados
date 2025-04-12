@@ -1,4 +1,4 @@
--- queries.sql:
+-- /queries.sql:
 -- queries simples:
 select
   *

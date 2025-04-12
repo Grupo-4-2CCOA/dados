@@ -1,4 +1,4 @@
--- inserts.sql:
+-- /inserts.sql:
 -- inserção na tabela de usuários:
 insert into
   `user`
