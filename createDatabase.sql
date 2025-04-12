@@ -6,7 +6,7 @@ use `grupo4`;
 
 -- tabela de usuários:
 create table `user`(
-  `id` int not null primary key,
+  `id` int not null primary key auto_increment,
   `active` tinyint not null default 1,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
@@ -21,7 +21,7 @@ create table `user`(
 );
 -- tabela de tipo de pagamento:
 create table `payment_type`(
-  `id` int not null primary key,
+  `id` int not null primary key auto_increment,
   `active` tinyint not null default 1,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
@@ -31,7 +31,7 @@ create table `payment_type`(
 );
 -- tabela de categoria:
 create table `category`(
-  `id` int not null primary key,
+  `id` int not null primary key auto_increment,
   `active` tinyint not null default 1,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
@@ -41,7 +41,7 @@ create table `category`(
 );
 -- tabela de serviços:
 create table `service`(
-  `id` int not null primary key,
+  `id` int not null primary key auto_increment,
   `active` tinyint not null default 1,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
@@ -58,7 +58,7 @@ create table `service`(
 );
 -- tabela de agendamentos:
 create table `schedule` (
-  `id` int not null primary key,
+  `id` int not null primary key auto_increment,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
 
@@ -75,7 +75,7 @@ create table `schedule` (
 );
 -- tabela de serviços por agendamento:
 create table `schedule_item`(
-  `id` int not null primary key,
+  `id` int not null primary key auto_increment,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
 
@@ -90,7 +90,7 @@ create table `schedule_item`(
 );
 -- tabela de feedbacks:
 create table `feedback` (
-  `id` int not null primary key,
+  `id` int not null primary key auto_increment,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
 
