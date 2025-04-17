@@ -4,6 +4,17 @@ create database if not exists `grupo4`;
 
 use `grupo4`;
 
+-- tabela de cargos:
+create table `role`(
+  `id` int not null primary key auto_increment,
+  `active` tinyint not null default 1,
+  `created_at` datetime not null default current_timestamp,
+  `updated_at` datetime not null default current_timestamp on update current_timestamp,
+
+  `name` varchar(80) not null,
+  `description` varchar(255)
+);
+
 -- tabela de usuários:
 create table `user`(
   `id` int not null primary key auto_increment,
@@ -11,13 +22,15 @@ create table `user`(
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
 
-  `role` enum("OWNER", "EMPLOYEE", "CUSTOMER") not null,
   `name` varchar(80) not null,
   `email` varchar(80) not null unique,
   `password` varchar(80) not null,
   `cpf` char(11) unique,
   `phone` char(11) unique,
-  `cep` char(8)
+  `cep` char(8),
+  
+  `fk_role` int not null,
+  constraint `user_fk_role` foreign key (`fk_role`) references `role`(`id`)
 );
 -- tabela de tipo de pagamento:
 create table `payment_type`(
@@ -103,3 +116,5 @@ create table `feedback` (
   constraint `feedback_fk_schedule` foreign key (`fk_schedule`) references `schedule`(`id`),
   constraint `feedback_fk_user` foreign key (`fk_user`) references `user`(`id`)
 );
+
+select * from user;
