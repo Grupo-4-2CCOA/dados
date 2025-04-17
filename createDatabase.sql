@@ -12,7 +12,8 @@ create table `role`(
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
 
   `name` varchar(80) not null,
-  `description` varchar(255)
+  `description` varchar(255),
+  constraint `role_check_name` check (`name` in ("OWNER", "CUSTOMER", "EMPLOYEE"))
 );
 
 -- tabela de usuários:
