@@ -4,7 +4,6 @@ insert into
   `user`
   (`role`, `name`, `email`, `password`, `cpf`, `phone`, `cep`)
   values
-  ('CUSTOMER', 'felipe', 'felipe@gmail,com', '12345678', '12345678912', '11950310303', 'teste'),
   ('CUSTOMER', 'miguel', 'miguel@gmail,com', '12345678', '12345678913', '11950310304', 'teste'),
   ('EMPLOYEE', 'murilo', 'murilo@gmail,com', '12345678', '12345678916', '11950310305', 'teste'),
   ('OWNER', 'fabricio', 'fabricio@gmail,com', '12345678', '12345678917', '11950310306', 'teste');
