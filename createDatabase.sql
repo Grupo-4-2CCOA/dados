@@ -37,31 +37,16 @@ create table `employee`(
 -- tabela de disponibilidade:
 create table `availability`(
   `id` int not null primary key auto_increment,
-  `active` tinyint not null default 1,
+  `is_available` tinyint not null default 1,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
-  `week_day` enum("SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY") not null,
+  `day` date not null,
   `start_time` time not null,
   `end_time` time not null,
   `fk_employee` int not null,
   
   constraint `availability_fk_employee` foreign key (`fk_employee`) references `employee`(`id`),
   constraint `availability_check_time` check (`start_time` < `end_time`)
-);
-
--- tabela de exceção da disponibilidate:
-create table `unavailable`(
-  `id` int not null primary key auto_increment,
-  `active` tinyint not null default 1,
-  `created_at` datetime not null default current_timestamp,
-  `updated_at` datetime not null default current_timestamp on update current_timestamp,
-  `day` datetime not null,
-  `start_time` time,
-  `end_time` time,
-  `fk_availability` int not null,
-  
-  constraint `unavailable_fk_availability` foreign key (`fk_availability`) references `availability`(`id`),
-  constraint `unavailable_check_time` check (`start_time` < `end_time`)
 );
 
 -- tabela de clientes:
@@ -166,14 +151,4 @@ create table `feedback` (
 
   constraint `feedback_fk_schedule` foreign key (`fk_schedule`) references `schedule`(`id`),
   constraint `feedback_fk_client` foreign key (`fk_client`) references `client`(`id`)
-);
-
-create table `log` (
-  `id` int not null primary key auto_increment,
-  `http_method` enum("POST", "PATCH", "PUT", "DELETE") not null,
-  `entity` enum("AVAILABILITY", "CATEGORY", "CLIENT", "EMPLOYEE", "FEEDBACK", "PAYMENT_TYPE", "ROLE", "SCHEDULE", "SCHEDULE_ITEM", "SERVICE", "UNAVAILABLE"),
-  `modified_at` datetime not null default current_timestamp,
-  `column` varchar(45) not null,
-  `old_value` varchar(255) not null,
-  `new_value` varchar(255) not null
 );
