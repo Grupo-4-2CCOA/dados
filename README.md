@@ -1,2 +1,2 @@
-# db
-Pasta para armazenar o banco de dados
+# back-end
+Pasta para armazenar os códigos de back-end
