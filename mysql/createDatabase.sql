@@ -31,7 +31,7 @@ create table `user`(
     `cep` char(8),
     `fk_role` int not null,
     
-    constraint `role_check_name` check (`name` in ("OWNER", "CUSTOMER", "EMPLOYEE"))
+    constraint `check_role_name` check (`name` in ("OWNER", "CUSTOMER", "EMPLOYEE"))
     );
 
 -- tabela de disponibilidade:
@@ -45,7 +45,7 @@ create table `user`(
   `end_time` time not null,
   `fk_employee` int not null,
   
-  constraint `availability_fk_employee` foreign key (`fk_role`) references `user`(`id`),
+  constraint `availability_fk_employee` foreign key (`fk_employee`) references `user`(`id`),
   constraint `availability_check_time` check (`start_time` < `end_time`)
 );
 
@@ -102,8 +102,8 @@ create table `schedule` (
   `fk_employee` int not null,
   `fk_payment_type` int,
 
-  constraint `schedule_fk_client` foreign key (`fk_role`) references `user`(`id`),
-  constraint `schedule_fk_employee` foreign key (`fk_role`) references `user`(`id`),
+  constraint `schedule_fk_client` foreign key (`fk_client`) references `user`(`id`),
+  constraint `schedule_fk_employee` foreign key (`fk_employee`) references `user`(`id`),
   constraint `schedule_fk_payment_type` foreign key (`fk_payment_type`) references `payment_type`(`id`)
 );
 
@@ -135,5 +135,5 @@ create table `feedback` (
   `fk_client` int not null,
 
   constraint `feedback_fk_schedule` foreign key (`fk_schedule`) references `schedule`(`id`),
-  constraint `feedback_fk_client` foreign key (`fk_role`) references `user`(`id`)
+  constraint `feedback_fk_client` foreign key (`fk_client`) references `user`(`id`)
 );
