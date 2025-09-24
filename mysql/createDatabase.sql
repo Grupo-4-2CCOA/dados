@@ -7,7 +7,7 @@ use `grupo4`;
 -- tabela de cargos:
 create table `role`(
   `id` int not null primary key auto_increment,
-  `active` tinyint not null default 1,
+  `is_active` tinyint not null default 1,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
 
@@ -16,26 +16,26 @@ create table `role`(
   constraint `role_check_name` check (`name` in ("OWNER", "CUSTOMER", "EMPLOYEE"))
 );
 
--- tabela de funcionários:
-create table `employee`(
-  `id` int not null primary key auto_increment,
-  `active` tinyint not null default 1,
-  `created_at` datetime not null default current_timestamp,
-  `updated_at` datetime not null default current_timestamp on update current_timestamp,
-
-  `name` varchar(80) not null,
-  `email` varchar(80) not null unique,
-  `password` varchar(80) not null,
-  `cpf` char(11) unique,
-  `phone` char(11) unique,
-  `cep` char(8),
-  `fk_role` int not null,
-  
-  constraint `employee_fk_role` foreign key (`fk_role`) references `role`(`id`)
-);
+-- tabela de usuários:
+create table `user`(
+	`id` int not null primary key auto_increment,
+    `is_active` tinyint not null default 1,
+    `created_at` datetime not null default current_timestamp,
+    `updated_at` datetime not null default current_timestamp on update current_timestamp,
+    
+    `name` varchar(80) not null,
+    `email` varchar(80) not null,
+    `password` varchar(80) not null,
+    `cpf` char(11),
+    `ph one` char(11),
+    `cep` char(8),
+    `fk_role` int not null,
+    
+    constraint `role_check_name` check (`name` in ("OWNER", "CUSTOMER", "EMPLOYEE"))
+    );
 
 -- tabela de disponibilidade:
-create table `availability`(
+ create table `availability`(
   `id` int not null primary key auto_increment,
   `is_available` tinyint not null default 1,
   `created_at` datetime not null default current_timestamp,
@@ -45,23 +45,8 @@ create table `availability`(
   `end_time` time not null,
   `fk_employee` int not null,
   
-  constraint `availability_fk_employee` foreign key (`fk_employee`) references `employee`(`id`),
+  constraint `availability_fk_employee` foreign key (`fk_role`) references `user`(`id`),
   constraint `availability_check_time` check (`start_time` < `end_time`)
-);
-
--- tabela de clientes:
-create table `client`(
-  `id` int not null primary key auto_increment,
-  `active` tinyint not null default 1,
-  `created_at` datetime not null default current_timestamp,
-  `updated_at` datetime not null default current_timestamp on update current_timestamp,
-
-  `name` varchar(80) not null,
-  `email` varchar(80) not null unique,
-  `password` varchar(80) not null,
-  `cpf` char(11) unique,
-  `phone` char(11) unique,
-  `cep` char(8)
 );
 
 -- tabela de tipo de pagamento:
@@ -77,7 +62,7 @@ create table `payment_type`(
 -- tabela de categoria:
 create table `category`(
   `id` int not null primary key auto_increment,
-  `active` tinyint not null default 1,
+  `is_active` tinyint not null default 1,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
   `name` varchar(80) not null,
@@ -87,7 +72,7 @@ create table `category`(
 -- tabela de serviços:
 create table `service`(
   `id` int not null primary key auto_increment,
-  `active` tinyint not null default 1,
+  `is_active` tinyint not null default 1,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
 
@@ -117,8 +102,8 @@ create table `schedule` (
   `fk_employee` int not null,
   `fk_payment_type` int,
 
-  constraint `schedule_fk_client` foreign key (`fk_client`) references `client`(`id`),
-  constraint `schedule_fk_employee` foreign key (`fk_employee`) references `employee`(`id`),
+  constraint `schedule_fk_client` foreign key (`fk_role`) references `user`(`id`),
+  constraint `schedule_fk_employee` foreign key (`fk_role`) references `user`(`id`),
   constraint `schedule_fk_payment_type` foreign key (`fk_payment_type`) references `payment_type`(`id`)
 );
 
@@ -150,5 +135,5 @@ create table `feedback` (
   `fk_client` int not null,
 
   constraint `feedback_fk_schedule` foreign key (`fk_schedule`) references `schedule`(`id`),
-  constraint `feedback_fk_client` foreign key (`fk_client`) references `client`(`id`)
+  constraint `feedback_fk_client` foreign key (`fk_role`) references `user`(`id`)
 );
