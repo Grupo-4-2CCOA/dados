@@ -12,41 +12,42 @@ create table `role`(
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
 
   `name` varchar(80) not null,
-  `description` varchar(255),
-  constraint `role_check_name` check (`name` in ("OWNER", "CUSTOMER", "EMPLOYEE"))
+  `description` varchar(255)
 );
 
 -- tabela de usuários:
 create table `user`(
 	`id` int not null primary key auto_increment,
-    `is_active` tinyint not null default 1,
-    `created_at` datetime not null default current_timestamp,
-    `updated_at` datetime not null default current_timestamp on update current_timestamp,
-    
-    `name` varchar(80) not null,
-    `email` varchar(80) not null,
-    `password` varchar(80) not null,
-    `cpf` char(11),
-    `ph one` char(11),
-    `cep` char(8),
-    `fk_role` int not null,
-    
-    constraint `check_role_name` check (`name` in ("OWNER", "CUSTOMER", "EMPLOYEE"))
-    );
-
--- tabela de disponibilidade:
- create table `availability`(
-  `id` int not null primary key auto_increment,
-  `is_available` tinyint not null default 1,
+  `is_active` tinyint not null default 1,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
-  `day` date not null,
-  `start_time` time not null,
-  `end_time` time not null,
-  `fk_employee` int not null,
   
-  constraint `availability_fk_employee` foreign key (`fk_employee`) references `user`(`id`),
-  constraint `availability_check_time` check (`start_time` < `end_time`)
+  `name` varchar(80) not null,
+  `email` varchar(80) not null,
+  `cpf` char(11),
+  `phone` char(11),
+  `cep` char(8),
+
+  `fk_role` int not null,
+
+  constraint `user_fk_role` foreign key (`fk_role`) references `role`(`id`)
+);
+
+-- tabela de disponibilidade:
+create table `availability`(
+  `id` int not null primary key auto_increment,
+  `created_at` datetime not null default current_timestamp,
+  `updated_at` datetime not null default current_timestamp on update current_timestamp,
+
+  `is_available` tinyint not null default 1,
+  `start_datetime` datetime not null,
+  `end_datetime` datetime not null,
+
+  `fk_employee` int not null,
+
+  constraint `availability_check_datetime` check (`start_datetime` < `end_datetime`),
+
+  constraint `availability_fk_employee` foreign key (`fk_employee`) references `user`(`id`)
 );
 
 -- tabela de tipo de pagamento:
@@ -55,6 +56,7 @@ create table `payment_type`(
   `active` tinyint not null default 1,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
+
   `name` varchar(80) not null,
   `description` varchar(255)
 );
@@ -65,6 +67,7 @@ create table `category`(
   `is_active` tinyint not null default 1,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
+
   `name` varchar(80) not null,
   `description` varchar(255)
 );
@@ -109,7 +112,7 @@ create table `schedule` (
 
 -- tabela de serviços por agendamento:
 create table `schedule_item`(
-  `id` int not null primary key auto_increment,
+  `id` int not null auto_increment,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
 
@@ -119,9 +122,11 @@ create table `schedule_item`(
   `fk_schedule` int not null,
   `fk_service` int not null,
 
+  constraint `pk_schedule_item` primary key (`id`, `fk_schedule`, `fk_service`),
   constraint `schedule_item_fk_schedule` foreign key (`fk_schedule`) references `schedule`(`id`),
   constraint `schedule_item_fk_service` foreign key (`fk_service`) references `service`(`id`)
 );
+
 -- tabela de feedbacks:
 create table `feedback` (
   `id` int not null primary key auto_increment,
@@ -132,8 +137,6 @@ create table `feedback` (
   `comment` varchar(255),
 
   `fk_schedule` int not null,
-  `fk_client` int not null,
 
-  constraint `feedback_fk_schedule` foreign key (`fk_schedule`) references `schedule`(`id`),
-  constraint `feedback_fk_client` foreign key (`fk_client`) references `user`(`id`)
+  constraint `feedback_fk_schedule` foreign key (`fk_schedule`) references `schedule`(`id`)
 );
