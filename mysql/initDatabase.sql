@@ -1,4 +1,23 @@
--- /createDatabase.sql:
+-- /mysql/initDatabase.sql:
+-- /mysql/createUser.sql:
+-- Usuários para ambiente de desenvolvimento:
+drop user if exists 'grupo4-infra-dev'@'localhost';
+create user 'grupo4-infra-dev'@'localhost' identified by 'infra';
+grant all privileges on grupo4.* to 'grupo4-infra-dev'@'localhost';
+
+-- Usuários para ambiente de homologação:
+drop user if exists 'grupo4-infra-hml'@'localhost';
+create user 'grupo4-infra-hml'@'localhost' identified by 'infra';
+grant all privileges on grupo4.* to 'grupo4-infra-hml'@'localhost';
+
+-- Usuários para ambiente de produção:
+drop user if exists 'grupo4-infra-prd'@'localhost';
+create user 'grupo4-infra-prd'@'localhost' identified by 'infra';
+grant all privileges on grupo4.* to 'grupo4-infra-prd'@'localhost';
+
+
+
+-- /mysql/createDatabase.sql:
 drop database if exists `grupo4`;
 create database if not exists `grupo4`;
 
@@ -143,19 +162,7 @@ create table `feedback` (
 
 
 
--- /createUser.sql:
-
--- Usuários para ambiente de desenvolvimento:
-drop user if exists 'grupo4-infra-dev'@'localhost';
-create user 'grupo4-infra-dev'@'localhost' identified by 'infra';
-grant select, insert, update, alter on grupo4.* to 'grupo4-infra-dev'@'localhost';
-
--- Usuários para ambiente de homologação:
-drop user if exists 'grupo4-infra-hml'@'localhost';
-create user 'grupo4-infra-hml'@'localhost' identified by 'infra';
-grant select, insert, update, alter on grupo4.* to 'grupo4-infra-hml'@'localhost';
-
--- Usuários para ambiente de produção:
-drop user if exists 'grupo4-infra-prd'@'localhost';
-create user 'grupo4-infra-prd'@'localhost' identified by 'infra';
-grant all privileges on grupo4.* to 'grupo4-infra-prd'@'localhost';
+-- /mysql/inserts.mysql:
+insert into role (`name`, `description`) values ("Administrador", "Administrador do sistema.");
+insert into role (`name`, `description`) values ("Cliente", "Cliente do salão.");
+insert into role (`name`, `description`) values ("Funcionário", "Funcionário do salão.");
