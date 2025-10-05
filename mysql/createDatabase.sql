@@ -1,4 +1,4 @@
--- /createDatabase.sql:
+-- /mysql/createDatabase.sql:
 drop database if exists `grupo4`;
 create database if not exists `grupo4`;
 
