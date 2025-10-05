@@ -188,7 +188,3 @@ insert into user (`name`, `email`, `cpf`, `phone`, `cep`, `fk_role`) values
 ('Carlos Pereira', 'carlos.pereira@email.com', '45612378900', '11977777777', '03030000', 3), -- funcionário
 ('Ana Oliveira', 'ana.oliveira@email.com', '78945612300', '11966666666', '04040000', 3), -- funcionário
 ('Admin Master', 'admin@email.com', '11122233344', '11955555555', '05050000', 1); -- admin
-
-
-
-
