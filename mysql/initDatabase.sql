@@ -1,5 +1,11 @@
 -- /mysql/initDatabase.sql:
 -- /mysql/createUser.sql:
+
+-- Usuários para infra:
+drop user if exists 'infra'@'localhost';
+create user 'infra'@'localhost' identified by 'infra';
+grant all privileges on grupo4.* to 'infra'@'localhost';
+
 -- Usuários para ambiente de desenvolvimento:
 drop user if exists 'grupo4-infra-dev'@'localhost';
 create user 'grupo4-infra-dev'@'localhost' identified by 'infra';
