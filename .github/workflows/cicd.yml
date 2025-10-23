@@ -42,7 +42,7 @@ jobs:
             echo "Arquivo SQL enviado ao ec2 privado"
 
             echo "Movendo o arquivo para a pasta correta"
-            ssh -i $INSTANCE_KEY $USUARIO_IP "sudo mv ~/initDatabase.sql /usr/share/mysql/initDatabase.sql"
+            ssh -i $INSTANCE_KEY $USUARIO_IP "sudo mv ~/initDatabase.sql /usr/share/mysql-beauty-barreto/initDatabase.sql"
             echo "Arquivo movido com sucesso"
 
             ssh -i $INSTANCE_KEY $USUARIO_IP "sudo docker compose up -d"
