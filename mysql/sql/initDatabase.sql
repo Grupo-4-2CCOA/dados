@@ -66,7 +66,7 @@ create table `availability`(
 -- tabela de tipo de pagamento:
 create table `payment_type`(
   `id` int not null primary key auto_increment,
-  `active` tinyint not null default 1,
+  `is_active` tinyint not null default 1,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
 
