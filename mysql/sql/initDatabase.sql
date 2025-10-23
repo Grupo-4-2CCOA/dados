@@ -1,7 +1,3 @@
--- /mysql/initDatabase.sql:
--- /mysql/createUser.sql:
-
--- Usuários para infra:
 drop user if exists 'infra'@'localhost';
 create user 'infra'@'localhost' identified by 'infra';
 grant all privileges on grupo4.* to 'infra'@'localhost';
@@ -21,15 +17,7 @@ drop user if exists 'grupo4-infra-prd'@'localhost';
 create user 'grupo4-infra-prd'@'localhost' identified by 'infra';
 grant all privileges on grupo4.* to 'grupo4-infra-prd'@'localhost';
 
-
-
--- /mysql/createDatabase.sql:
-drop database if exists `grupo4`;
-create database if not exists `grupo4`;
-
-use `grupo4`;
-
--- tabela de cargos:
+-- Create Tables
 create table `role`(
   `id` int not null primary key auto_increment,
   `is_active` tinyint not null default 1,
@@ -166,9 +154,6 @@ create table `feedback` (
   constraint `feedback_fk_schedule` foreign key (`fk_schedule`) references `schedule`(`id`)
 );
 
-
-
--- /mysql/inserts.mysql:
 insert into role (`name`, `description`) values ("Administrador", "Administrador do sistema.");
 insert into role (`name`, `description`) values ("Cliente", "Cliente do salão.");
 insert into role (`name`, `description`) values ("Funcionário", "Funcionário do salão.");
