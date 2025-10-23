@@ -26,7 +26,7 @@ jobs:
       - name: Executar Comando Shell na EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ matrix.host.remote_host }} 
+          host: ${{ secrets.REMOTE_HOST_PUBLICO }} 
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}  
 
