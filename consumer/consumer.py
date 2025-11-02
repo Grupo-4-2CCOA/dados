@@ -3,10 +3,9 @@ import pika
 import mysql.connector
 from rich.console import Console
 from rich.json import JSON
-from datetime import datetime
 
 # === CONFIGURAÇÕES ===
-RABBITMQ_URL = "amqp://guest:guest@ip-da-aws:5672/"
+RABBITMQ_URL = "amqp://guest:guest@localhost:5672/"
 QUEUE_NAME = "beauty-barreto.queue"
 
 DB_CONFIG = {
@@ -18,69 +17,94 @@ DB_CONFIG = {
 
 console = Console()
 
-# === BANCO DE DADOS ===
-def salvar_agendamento(data):
+def salvar_feedback(data):
     try:
         conn = mysql.connector.connect(**DB_CONFIG)
         cursor = conn.cursor()
 
-        # Inserir na tabela schedule
+        # Salvar feedback
         cursor.execute("""
-            INSERT INTO schedule (
-                status, appointment_datetime, duration,
-                transaction_hash, fk_client, fk_employee, fk_payment_type
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO feedback (
+                rating, comment, fk_schedule
+            ) VALUES (%s, %s, %s)
         """, (
-            data["status"],
-            data["appointment_datetime"],
-            data.get("duration"),
-            data.get("transaction_hash"),
-            data["fk_client"],
-            data["fk_employee"],
-            data.get("fk_payment_type")
+            data["rating"],
+            data.get("comment", ""),
+            data["scheduleId"]
         ))
-
-        schedule_id = cursor.lastrowid
-
-        # Inserir os itens na tabela schedule_item
-        for item in data.get("items", []):
-            cursor.execute("""
-                INSERT INTO schedule_item (
-                    final_price, discount, fk_schedule, fk_service
-                ) VALUES (%s, %s, %s, %s)
-            """, (
-                item["final_price"],
-                item.get("discount", 0),
-                schedule_id,
-                item["fk_service"]
-            ))
-
         conn.commit()
-        return schedule_id
+        feedback_id = cursor.lastrowid
+
+        # Buscar e-mail e nome do cliente
+        # cursor.execute("""
+        #     SELECT u.name, u.email
+        #     FROM schedule s
+        #     JOIN user u ON u.id = s.fk_client
+        #     WHERE s.id = %s
+        # """, [data["scheduleId"]])
+        # cliente = cursor.fetchone()
+
+        # if cliente:
+        #     nome_cliente, email_cliente = cliente
+        #     enviar_email_agradecimento(
+        #         destinatario=email_cliente,
+        #         nome_cliente=nome_cliente,
+        #         rating=data["rating"],
+        #         comment=data.get("comment", "")
+        #     )
+
+        return feedback_id
 
     except mysql.connector.Error as err:
-        console.print(f"[red]❌ Erro ao salvar no MySQL:[/red] {err}")
+        console.print(f"[red] Erro ao salvar feedback no MySQL:[/red] {err}")
         return None
     finally:
         if conn.is_connected():
             cursor.close()
             conn.close()
 
+
+# def enviar_email_agradecimento(destinatario, nome_cliente, rating, comment):
+#     msg = EmailMessage()
+#     msg["Subject"] = "Obrigado pelo seu feedback! 💬"
+#     msg["From"] = "contato@beautybarreto.com.br"
+#     msg["To"] = destinatario
+
+#     corpo = f"""
+#     <html>
+#     <body>
+#         <p>Olá {nome_cliente},</p>
+#         <p>Obrigado por avaliar seu atendimento no <strong>Beauty Barreto</strong>!</p>
+#         <p><strong>⭐ Avaliação:</strong> {rating} estrelas<br>
+#         <strong>📝 Comentário:</strong> “{comment}”</p>
+#         <p>Ficamos felizes com sua opinião. Esperamos vê-lo novamente em breve!</p>
+#         <p>Com carinho,<br>Equipe Beauty Barreto</p>
+#     </body>
+#     </html>
+#     """
+
+#     msg.set_content("Obrigado pelo seu feedback!")
+#     msg.add_alternative(corpo, subtype="html")
+
+#     with smtplib.SMTP_SSL("smtp.seudominio.com", 465) as smtp:
+#         smtp.login("seu-usuario", "sua-senha")
+#         smtp.send_message(msg)
+
 # === CONSUMER ===
 def on_message(channel, method, properties, body):
     try:
         data = json.loads(body.decode())
-        console.rule("[bold green]📩 Nova mensagem recebida")
+        console.rule("[bold green] Novo feedback recebido")
         console.print(JSON.from_data(data))
 
-        schedule_id = salvar_agendamento(data)
-        if schedule_id:
-            console.print(f"[bold blue]💾 Agendamento salvo com ID {schedule_id}.")
+        feedback_id = salvar_feedback(data)
+        if feedback_id:
+            console.print(f"[bold blue] Feedback salvo com ID {feedback_id}.")
         else:
-            console.print("[red]⚠️ Falha ao salvar agendamento.")
+            console.print("[red] Falha ao salvar feedback.")
 
     except json.JSONDecodeError:
-        console.print(f"[red]❌ Erro ao decodificar JSON:[/red] {body}")
+        console.print(f"[red] Erro ao decodificar JSON:[/red] {body}")
     finally:
         channel.basic_ack(delivery_tag=method.delivery_tag)
 
@@ -90,7 +114,7 @@ def main():
     channel = connection.channel()
     channel.queue_declare(queue=QUEUE_NAME, durable=True)
 
-    console.print(f"✅ Aguardando mensagens da fila [bold cyan]{QUEUE_NAME}[/bold cyan]...\n")
+    console.print(f" Aguardando feedbacks da fila [bold cyan]{QUEUE_NAME}[/bold cyan]...\n")
     channel.basic_consume(queue=QUEUE_NAME, on_message_callback=on_message)
 
     try:
