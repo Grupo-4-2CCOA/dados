@@ -1,7 +1,9 @@
 name: Init MySQL Database
 
 on:
-  workflow_dispatch: # permite iniciar manualmente.
+  push:
+    branches:
+      - homologation
 
 jobs:
   init-db:
