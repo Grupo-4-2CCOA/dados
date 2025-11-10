@@ -47,5 +47,5 @@ jobs:
             ssh -i $INSTANCE_KEY $USUARIO_IP "sudo docker compose up -d"
             echo "Servico iniciado via Docker Compose"
 
-            ssh -i $INSTANCE_KEY $USUARIO_IP "sudo docker exec -i NOME_DO_CONTAINER_MYSQL mysql -uUSER -pPASSWORD DATABASE < /usr/share/mysql-beauty-barreto/initDatabase.sql"
+            ssh -i $INSTANCE_KEY $USUARIO_IP "sudo docker exec -i mysql-database mysql -uUSER -pPASSWORD DATABASE < /usr/share/mysql-beauty-barreto/initDatabase.sql"
             echo "Banco de dados inicializado com initDatabase.sql"
