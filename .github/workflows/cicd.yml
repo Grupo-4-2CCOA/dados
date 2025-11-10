@@ -1,0 +1,49 @@
+name: CI/CD para EC2 do Banco de Dados
+
+on:
+  push:
+    branches:
+      - homologation
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Copiar arquivos e Deploy (Usando SSH com rsync)
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST_PUBLICO }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: /home/${{ secrets.REMOTE_USER }}/database/
+          ARGS: "-rltgoDzvO --delete"
+          SOURCE: "./mysql/sql/initDatabase.sql"
+          
+      - name: Executar Comando Shell na EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_HOST_PUBLICO }} 
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}  
+
+          script: |
+            set -e
+
+            INSTANCE_KEY="instance-key-db.pem"
+            USUARIO_IP=${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST_PRIVADO }}
+            echo "usuario@ip configurado: $USUARIO_IP"
+
+            echo "Tentando enviar arquivo /home/${{ secrets.REMOTE_USER }}/database/initDatabase.sql"
+            scp -o StrictHostKeyChecking=no -i $INSTANCE_KEY /home/${{ secrets.REMOTE_USER }}/database/initDatabase.sql $USUARIO_IP:~/initDatabase.sql
+            echo "Arquivo SQL enviado ao ec2 privado"
+
+            echo "Movendo o arquivo para a pasta correta"
+            ssh -i $INSTANCE_KEY $USUARIO_IP "sudo mv ~/initDatabase.sql /usr/share/mysql-beauty-barreto/initDatabase.sql"
+            echo "Arquivo movido com sucesso"
+
+            ssh -i $INSTANCE_KEY $USUARIO_IP "sudo docker compose up -d"
+            echo "Servico iniciado via Docker Compose"
