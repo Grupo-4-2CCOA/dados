@@ -18,15 +18,11 @@ jobs:
           SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
           PUBLIC_HOST: ${{ secrets.REMOTE_HOST_PUBLICO }}
           PRIVATE_HOST: ${{ secrets.REMOTE_HOST_PRIVADO }}
-          # esse run salva a chave SSH da ponte;
-          # copia initDatabase.sql para a instância pública
-          # executa um comando remoto via ssh pra fazer o tunnel e rodar o sql;
-          # roda mysql dentro do docker usando o arquivo /tmp/initDatabase.sql recebido da pública.
         run: |
           echo "$SSH_KEY" > bridge_key.pem
           chmod 600 bridge_key.pem
 
-          scp -i bridge_key.pem -o StrictHostKeyChecking=no initDatabase.sql ubuntu@$PUBLIC_HOST:/tmp/
+          scp -i bridge_key.pem -o StrictHostKeyChecking=no /mysql/sql/initDatabase.sql ubuntu@$PUBLIC_HOST:/tmp/
 
           ssh -i bridge_key.pem -o StrictHostKeyChecking=no ubuntu@$PUBLIC_HOST "
             ssh -i /path/to/private/key/on/public/instance -o StrictHostKeyChecking=no ubuntu@$PRIVATE_HOST '
