@@ -6,7 +6,7 @@ Branches são usadas para desenvolver funcionalidades isoladas umas das outras. 
 `git checkout -b nome-da-branch`
  
 Substitua `nome-da-branch` pelo nome descritivo da sua nova funcionalidade ou correção.
-
+ 
 `git checkout nome-da-branch`
 
 Esse comando muda de branch sem criar uma nova.
