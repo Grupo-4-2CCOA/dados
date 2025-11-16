@@ -48,7 +48,7 @@ jobs:
               set -e
               sudo docker compose up -d
 
-              until sudo docker exec mysql-database mysqladmin ping -uroot -pinfra --silent; do
+              until sudo docker exec mysql-database mysqladmin ping -h 127.0.0.1 -P 3306 -uroot -pinfra --silent; do
                 sleep 2
               done
 
