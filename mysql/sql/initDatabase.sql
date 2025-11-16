@@ -18,7 +18,7 @@ create user 'grupo4-infra-prd'@'localhost' identified by 'infra';
 grant all privileges on grupo4.* to 'grupo4-infra-prd'@'localhost';
 
 -- Create Tables
-create table `role`(
+create table if not exists `role`(
   `id` int not null primary key auto_increment,
   `is_active` tinyint not null default 1,
   `created_at` datetime not null default current_timestamp,
@@ -29,7 +29,7 @@ create table `role`(
 );
 
 -- tabela de usuários:
-create table `user`(
+create table if not exists `user`(
 	`id` int not null primary key auto_increment,
   `is_active` tinyint not null default 1,
   `created_at` datetime not null default current_timestamp,
@@ -47,7 +47,7 @@ create table `user`(
 );
 
 -- tabela de disponibilidade:
-create table `availability`(
+create table if not exists`availability`(
   `id` int not null primary key auto_increment,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
@@ -64,7 +64,7 @@ create table `availability`(
 );
 
 -- tabela de tipo de pagamento:
-create table `payment_type`(
+create table if not exists `payment_type`(
   `id` int not null primary key auto_increment,
   `is_active` tinyint not null default 1,
   `created_at` datetime not null default current_timestamp,
@@ -75,7 +75,7 @@ create table `payment_type`(
 );
 
 -- tabela de categoria:
-create table `category`(
+create table if not exists `category`(
   `id` int not null primary key auto_increment,
   `is_active` tinyint not null default 1,
   `created_at` datetime not null default current_timestamp,
@@ -86,7 +86,7 @@ create table `category`(
 );
 
 -- tabela de serviços:
-create table `service`(
+create table if not exists `service`(
   `id` int not null primary key auto_increment,
   `is_active` tinyint not null default 1,
   `created_at` datetime not null default current_timestamp,
@@ -104,7 +104,7 @@ create table `service`(
 );
 
 -- tabela de agendamentos:
-create table `schedule` (
+create table if not exists `schedule` (
   `id` int not null primary key auto_increment,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
@@ -124,7 +124,7 @@ create table `schedule` (
 );
 
 -- tabela de serviços por agendamento:
-create table `schedule_item`(
+create table if not exists `schedule_item`(
   `id` int not null auto_increment,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
@@ -141,7 +141,7 @@ create table `schedule_item`(
 );
 
 -- tabela de feedbacks:
-create table `feedback` (
+create table if not exists `feedback` (
   `id` int not null primary key auto_increment,
   `created_at` datetime not null default current_timestamp,
   `updated_at` datetime not null default current_timestamp on update current_timestamp,
@@ -154,26 +154,26 @@ create table `feedback` (
   constraint `feedback_fk_schedule` foreign key (`fk_schedule`) references `schedule`(`id`)
 );
 
-insert into role (`name`, `description`) values ("Administrador", "Administrador do sistema.");
-insert into role (`name`, `description`) values ("Cliente", "Cliente do salão.");
-insert into role (`name`, `description`) values ("Funcionário", "Funcionário do salão.");
+insert ignore into role (`name`, `description`) values ("Administrador", "Administrador do sistema.");
+insert ignore into role (`name`, `description`) values ("Cliente", "Cliente do salão.");
+insert ignore into role (`name`, `description`) values ("Funcionário", "Funcionário do salão.");
 
-insert into payment_type (`name`,`description`) values ('Cartão', 'Pagamento via cartão de crédito e débito');
-insert into payment_type (`name`,`description`) values ('Pix', 'Pagamento instantâneo via Pix');
-insert into payment_type (`name`,`description`) values ('Dinheiro', 'Pagamento em espécie');
+insert ignore into payment_type (`name`,`description`) values ('Cartão', 'Pagamento via cartão de crédito e débito');
+insert ignore into payment_type (`name`,`description`) values ('Pix', 'Pagamento instantâneo via Pix');
+insert ignore into payment_type (`name`,`description`) values ('Dinheiro', 'Pagamento em espécie');
 
-insert into category (`name`, `description`) values ('Cabelo', 'Serviços relacionados a cortes, tinturas e tratamentos capilares');
-insert into category (`name`, `description`) values ('Estética', 'Serviços de estética e cuidados com a pele');
-insert into category (`name`, `description`) values ('Unhas', 'Serviços de manicure e pedicure');
+insert ignore into category (`name`, `description`) values ('Cabelo', 'Serviços relacionados a cortes, tinturas e tratamentos capilares');
+insert ignore into category (`name`, `description`) values ('Estética', 'Serviços de estética e cuidados com a pele');
+insert ignore into category (`name`, `description`) values ('Unhas', 'Serviços de manicure e pedicure');
 
-insert into service (`name`, `base_price`, `base_duration`, `description`, `image`, `fk_category`) values
+insert ignore into service (`name`, `base_price`, `base_duration`, `description`, `image`, `fk_category`) values
 ('Corte de cabelo feminino', 80.00, 60, 'Corte estilizado para mulheres', null, 1),
 ('Limpeza de pele', 120.00, 90, 'Tratamento de pele facial completo', null, 2),
 ('Manicure simples', 40.00, 45, 'Corte, lixamento e esmaltação básica para as mãos', null, 3),
 ('Pedicure simples', 50.00, 45, 'Corte, lixamento e esmaltação básica para os pés', null, 3),
 ('Unhas de gel', 80.00, 45, 'Serviço de unhas de gel para mão e pé', null, 3);
 
-insert into user (`name`, `email`, `cpf`, `phone`, `cep`, `fk_role`) values
+insert ignore into user (`name`, `email`, `cpf`, `phone`, `cep`, `fk_role`) values
 ('João Silva', 'joao.silva@email.com', '12345678901', '11999999999', '01001000', 2), -- cliente
 ('Maria Souza', 'maria.souza@email.com', '98765432100', '11988888888', '02020000', 2), -- cliente
 ('Carlos Pereira', 'carlos.pereira@email.com', '45612378900', '11977777777', '03030000', 3), -- funcionário

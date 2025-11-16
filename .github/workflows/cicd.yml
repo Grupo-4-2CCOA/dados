@@ -44,8 +44,15 @@ jobs:
             ssh -i $INSTANCE_KEY $USUARIO_IP "sudo mv ~/initDatabase.sql /usr/share/mysql-beauty-barreto/initDatabase.sql"
             echo "Arquivo movido com sucesso"
 
-            ssh -i $INSTANCE_KEY $USUARIO_IP "sudo docker compose up -d"
-            echo "Servico iniciado via Docker Compose"
+            ssh -i $INSTANCE_KEY $USUARIO_IP '
+              set -e
+              sudo docker compose up -d
 
-            ssh -i $INSTANCE_KEY $USUARIO_IP "sudo docker exec -i mysql-database mysql -uroot -pinfra grupo4 < /usr/share/mysql-beauty-barreto/initDatabase.sql"
-            echo "Banco de dados inicializado com initDatabase.sql"
+              until sudo docker exec mysql-database mysqladmin ping -uroot -pinfra --silent; do
+                sleep 2
+              done
+
+              sudo docker exec -i mysql-database mysql -uroot -pinfra grupo4 < /usr/share/mysql-beauty-barreto/initDatabase.sql
+            '
+
+            echo "Servico iniciado via Docker Compose e inicializado com initDatabase.sql"
