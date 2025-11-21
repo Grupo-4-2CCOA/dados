@@ -3,6 +3,9 @@ import pika
 import mysql.connector
 from rich.console import Console
 from rich.json import JSON
+from email.message import EmailMessage
+import smtplib
+
 
 # === CONFIGURAÇÕES ===
 RABBITMQ_URL = "amqp://guest:guest@localhost:5672/"
@@ -36,22 +39,22 @@ def salvar_feedback(data):
         feedback_id = cursor.lastrowid
 
         # Buscar e-mail e nome do cliente
-        # cursor.execute("""
-        #     SELECT u.name, u.email
-        #     FROM schedule s
-        #     JOIN user u ON u.id = s.fk_client
-        #     WHERE s.id = %s
-        # """, [data["scheduleId"]])
-        # cliente = cursor.fetchone()
+        cursor.execute("""
+            SELECT u.name, u.email
+            FROM schedule s
+            JOIN user u ON u.id = s.fk_client
+            WHERE s.id = %s
+        """, [data["scheduleId"]])
+        cliente = cursor.fetchone()
 
-        # if cliente:
-        #     nome_cliente, email_cliente = cliente
-        #     enviar_email_agradecimento(
-        #         destinatario=email_cliente,
-        #         nome_cliente=nome_cliente,
-        #         rating=data["rating"],
-        #         comment=data.get("comment", "")
-        #     )
+        if cliente:
+            nome_cliente, email_cliente = cliente
+            enviar_email_agradecimento(
+                destinatario=email_cliente,
+                nome_cliente=nome_cliente,
+                rating=data["rating"],
+                comment=data.get("comment", "")
+            )
 
         return feedback_id
 
@@ -64,31 +67,59 @@ def salvar_feedback(data):
             conn.close()
 
 
-# def enviar_email_agradecimento(destinatario, nome_cliente, rating, comment):
-#     msg = EmailMessage()
-#     msg["Subject"] = "Obrigado pelo seu feedback! 💬"
-#     msg["From"] = "contato@beautybarreto.com.br"
-#     msg["To"] = destinatario
+def enviar_email_agradecimento(destinatario, nome_cliente, rating, comment):
+    try:
+        print(">>> [1] Entrou na função enviar_email_agradecimento")
 
-#     corpo = f"""
-#     <html>
-#     <body>
-#         <p>Olá {nome_cliente},</p>
-#         <p>Obrigado por avaliar seu atendimento no <strong>Beauty Barreto</strong>!</p>
-#         <p><strong>⭐ Avaliação:</strong> {rating} estrelas<br>
-#         <strong>📝 Comentário:</strong> “{comment}”</p>
-#         <p>Ficamos felizes com sua opinião. Esperamos vê-lo novamente em breve!</p>
-#         <p>Com carinho,<br>Equipe Beauty Barreto</p>
-#     </body>
-#     </html>
-#     """
+        msg = EmailMessage()
+        msg["Subject"] = "Obrigado pelo seu feedback! 💬"
+        msg["From"] = "Beauty Barreto"
+        msg["To"] = destinatario
 
-#     msg.set_content("Obrigado pelo seu feedback!")
-#     msg.add_alternative(corpo, subtype="html")
+        print(">>> [2] Headers configurados")
 
-#     with smtplib.SMTP_SSL("smtp.seudominio.com", 465) as smtp:
-#         smtp.login("seu-usuario", "sua-senha")
-#         smtp.send_message(msg)
+        # --- 🟦 BLOCO DO COMENTÁRIO (opcional) ---
+        comentario_html = ""
+        if comment and comment.strip():  # só adiciona se tiver texto
+            comentario_html = f"""
+                <p><strong>📝 Comentário:</strong> “{comment}”</p>
+            """
+        # ----------------------------------------------------
+
+        corpo = f"""
+        <html>
+        <body>
+            <p>Olá {nome_cliente},</p>
+            <p>Obrigado por avaliar seu atendimento no <strong> Espaço Vilma Barreto</strong>!</p>
+            <p><strong>⭐ Avaliação:</strong> {rating} estrelas<br>
+            {comentario_html}
+            <p>Ficamos felizes com sua opinião. Esperamos vê-lo novamente em breve!</p>
+            <p>Com carinho,<br>Equipe Beauty Barreto</p>
+        </body>
+        </html>
+        """
+
+        msg.set_content("Obrigado pelo seu feedback!")
+        msg.add_alternative(corpo, subtype="html")
+
+        print(">>> [3] Corpo do e-mail configurado")
+
+        print(">>> [4] Tentando conectar ao SMTP...")
+
+        with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
+            print(">>> [5] Conectado ao servidor SMTP")
+
+            smtp.starttls()
+            print(">>> [6] TLS iniciado")
+
+            smtp.login("miguel.lopesluvizon@gmail.com", "senha enviada no email grupo 4")
+            print(">>> [7] Login realizado com sucesso")
+
+            smtp.send_message(msg)
+            print(">>> [8] E-MAIL ENVIADO COM SUCESSO!!!")
+
+    except Exception as e:
+        print("!!! ERRO NO ENVIO DE E-MAIL:", e)
 
 # === CONSUMER ===
 def on_message(channel, method, properties, body):
