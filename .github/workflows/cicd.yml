@@ -51,6 +51,7 @@ jobs:
               until sudo docker exec mysql-database mysqladmin ping -uroot -pinfra --silent; do
                 sleep 2
               done
+              sleep 10
 
               sudo docker exec -i mysql-database mysql -uroot -pinfra grupo4 < /usr/share/mysql-beauty-barreto/initDatabase.sql
             '
