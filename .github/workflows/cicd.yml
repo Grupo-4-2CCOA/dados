@@ -53,7 +53,7 @@ jobs:
               done
               sleep 10
 
-              sudo docker exec -i mysql-database mysql -uroot -pinfra grupo4 < /usr/share/mysql-beauty-barreto/initDatabase.sql
+              sudo docker exec -i mysql-database mysql -uroot -pinfra --default-character-set=utf8mb4 grupo4 < /usr/share/mysql-beauty-barreto/initDatabase.sql
             '
 
             echo "Servico iniciado via Docker Compose e inicializado com initDatabase.sql"
