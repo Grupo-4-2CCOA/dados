@@ -167,11 +167,11 @@ insert into category (`name`, `description`) values ('Estética', 'Serviços de 
 insert into category (`name`, `description`) values ('Unhas', 'Serviços de manicure e pedicure');
 
 insert into service (`name`, `base_price`, `base_duration`, `description`, `image`, `fk_category`) values
-('Corte de cabelo feminino', 80.00, 60, 'Corte estilizado para mulheres', null, 1),
-('Limpeza de pele', 120.00, 90, 'Tratamento de pele facial completo', null, 2),
-('Manicure simples', 40.00, 45, 'Corte, lixamento e esmaltação básica para as mãos', null, 3),
-('Pedicure simples', 50.00, 45, 'Corte, lixamento e esmaltação básica para os pés', null, 3),
-('Unhas de gel', 80.00, 45, 'Serviço de unhas de gel para mão e pé', null, 3);
+('Corte de cabelo feminino', 80.00, 60, 'Corte estilizado para mulheres', 'corte-de-cabelo.jpg', 1),
+('Limpeza de pele', 120.00, 90, 'Tratamento de pele facial completo', 'limpeza-simples.jpg', 2),
+('Manicure simples', 40.00, 45, 'Corte, lixamento e esmaltação básica para as mãos', 'manicure-simples.jpg', 3),
+('Pedicure simples', 50.00, 45, 'Corte, lixamento e esmaltação básica para os pés', 'pedicure.jpg', 3),
+('Unhas de gel', 80.00, 45, 'Serviço de unhas de gel para mão e pé', 'unha-gel.jpg', 3);
 
 insert into user (`name`, `email`, `cpf`, `phone`, `cep`, `fk_role`) values
 ('João Silva', 'joao.silva@email.com', '12345678901', '11999999999', '01001000', 2), -- cliente
