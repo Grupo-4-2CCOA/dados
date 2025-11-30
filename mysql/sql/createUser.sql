@@ -1,5 +1,4 @@
 -- /mysql/createUser.sql:
-
 -- Usuários para infra:
 drop user if exists 'infra'@'localhost';
 create user 'infra'@'localhost' identified by 'infra';
