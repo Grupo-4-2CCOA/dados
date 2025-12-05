@@ -185,7 +185,7 @@ insert into service (`name`, `base_price`, `base_duration`, `description`, `imag
 ('Limpeza de pele', 120.00, 90, 'Tratamento de pele facial completo', 'limpeza-simples.jpg', 2),
 ('Manicure simples', 40.00, 45, 'Corte, lixamento e esmaltação básica para as mãos', 'manicure-simples.jpg', 3),
 ('Pedicure simples', 50.00, 45, 'Corte, lixamento e esmaltação básica para os pés', 'pedicure.jpg', 3),
-('Unhas de gel', 80.00, 45, 'Serviço de unhas de gel para mão e pé', 'unhas-gel.jpg', 3);
+('Unhas de gel', 80.00, 45, 'Serviço de unhas de gel para mão e pé', 'unha-gel.jpg', 3);
 
 insert into user (`name`, `email`, `cpf`, `phone`, `cep`, `fk_role`) values
     ('João Silva', 'joao.silva@email.com', '12345678901', '11999999999', '01001000', 3),
