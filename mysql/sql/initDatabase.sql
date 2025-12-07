@@ -172,7 +172,8 @@ insert into role (`name`, `description`) values ("Administrador", "Administrador
 insert into role (`name`, `description`) values ("Cliente", "Cliente do salão.");
 insert into role (`name`, `description`) values ("Funcionário", "Funcionário do salão.");
 
-insert into payment_type (`name`,`description`) values ('Cartão', 'Pagamento via cartão de crédito e débito');
+insert into payment_type (`name`,`description`) values ('Crédito', 'Pagamento via cartão de crédito');
+insert into payment_type (`name`,`description`) values ('Débito', 'Pagamento via cartão de débito');
 insert into payment_type (`name`,`description`) values ('Pix', 'Pagamento instantâneo via Pix');
 insert into payment_type (`name`,`description`) values ('Dinheiro', 'Pagamento em espécie');
 
