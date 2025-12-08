@@ -167,6 +167,9 @@ create table `feedback` (
 
 
 -- /mysql/inserts.mysql:
+-- /mysql/inserts.mysql:
+
+-- /mysql/inserts.mysql:
 insert into role (`name`, `description`, `created_at`) values
   ('Administrador', 'Administrador do sistema.', '2025-01-01 00:00:00'),
   ('Cliente', 'Cliente do salão.', '2025-01-02 00:00:00'),
